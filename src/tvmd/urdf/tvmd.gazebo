@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<robot name="tvmd" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<xacro:property name="body_color" value="Gazebo/Silver" />
+
+<!-- <gazebo>
+  <plugin name="control" filename="libgazebo_ros_control.so"/>
+</gazebo> -->
+
+<!-- Dynamics -->
+
+<xacro:macro name="gz_material" params="joint_name color_name" >
+  <gazebo reference="${joint_name}">
+    <material>Gazebo/${color_name}</material>
+
+    <!-- Frictions -->
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+
+    <selfCollide>false</selfCollide>
+
+    <gravity>true</gravity>
+  </gazebo>
+</xacro:macro>
+
+<xacro:macro name="gz_servo" params="joint_name sub_topic" >
+  <gazebo>
+    <plugin
+      filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+      <joint_name>${joint_name}</joint_name>
+      <sub_topic>${sub_topic}</sub_topic>
+      <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
+      <!-- <joint_index>"${joint_index}"</joint_index> -->
+    </plugin>
+  </gazebo>
+</xacro:macro>
+
+<xacro:macro name="gz_prop" params="joint_name link_name number_motor" >
+  <gazebo>
+    <plugin filename="gz-sim-multicopter-motor-model-system" name="gz::sim::systems::MulticopterMotorModel">
+      <jointName>${joint_name}</jointName>
+      <linkName>${link_name}</linkName>
+      <turningDirection>ccw</turningDirection>
+      <timeConstantUp>0.0125</timeConstantUp>
+      <timeConstantDown>0.025</timeConstantDown>
+      <maxRotVelocity>1500</maxRotVelocity>
+      <motorConstant>2e-05</motorConstant>
+      <momentConstant>0.06</momentConstant>
+      <commandSubTopic>command/motor_speed</commandSubTopic>
+      <motorNumber>${number_motor}</motorNumber>
+      <rotorDragCoefficient>0.000106428</rotorDragCoefficient>
+      <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+      <rotorVelocitySlowdownSim>20</rotorVelocitySlowdownSim>
+      <motorType>velocity</motorType>
+    </plugin>
+  </gazebo>
+</xacro:macro>
+
+<!-- For Control Surfaces -->
+<xacro:macro name="gz_team_lift_drag" >
+  <gazebo>
+    <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+      <a0>0.05984281113</a0>
+      <cla>4.752798721</cla>
+      <cda>0.6417112299</cda>
+      <cma>0.0</cma>
+      <alpha_stall>0.3391428111</alpha_stall>
+      <cla_stall>-3.85</cla_stall>
+      <cda_stall>-0.9233984055</cda_stall>
+      <cma_stall>0</cma_stall>
+      <cp>-0.05 -0.3 0.05</cp>
+      <area>0.50</area>
+      <air_density>1.2041</air_density>
+      <forward>1 0 0</forward>
+      <upward>0 0 1</upward>
+      <link_name>base_link</link_name>
+      <!-- <control_joint_name>servo_1</control_joint_name> -->
+      <!-- <control_joint_rad_to_cl>-1.0</control_joint_rad_to_cl> -->
+    </plugin>
+  </gazebo>
+</xacro:macro>
+
+
+  <!-- IMU -->
+<gazebo reference="base_link">
+  <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>250</update_rate>
+  </sensor>
+</gazebo>
+
+<gazebo reference="base_link">  
+  <sensor name="air_pressure_sensor" type="air_pressure">
+    <always_on>true</always_on>
+    <update_rate>50</update_rate>
+    <air_pressure>
+        <pressure>
+        <noise type="gaussian">
+            <mean>0</mean>
+            <stddev>0.01</stddev>
+        </noise>
+        </pressure>
+    </air_pressure>
+  </sensor>
+</gazebo>
+
+</robot>

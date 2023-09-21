@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<robot name="tvmd" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find tvmd)/urdf/materials.xacro" />
+
+
+<xacro:include filename="$(find tvmd)/urdf/tvmd.trans" />
+<xacro:include filename="$(find tvmd)/urdf/tvmd.gazebo" />
+<xacro:include filename="$(find tvmd)/urdf/Navigator-Def.xacro" />
+<xacro:include filename="$(find tvmd)/urdf/Single-Agent-Def.xacro" />
+
+<!-- Define Robot -->
+
+<xacro:macro name="module" params="module_id">
+  <!-- Links -->
+  <xacro:body_link module_id="${module_id}" />
+  <xacro:gimbal_link module_id="${module_id}" />
+  <xacro:actuator_link module_id="${module_id}" />
+  <xacro:prop1_link module_id="${module_id}" />
+  <xacro:prop2_link module_id="${module_id}" />
+
+  <!-- Joints -->
+  <xacro:body_gimbal_joint module_id="${module_id}" />
+  <xacro:gimbal_actuator_joint module_id="${module_id}" />
+  <xacro:actuator_prop1_joint module_id="${module_id}" />
+  <xacro:actuator_prop2_joint module_id="${module_id}" />
+</xacro:macro>
+
+<!-- Team System -->
+
+<xacro:navigator />
+<xacro:module module_id="1" />
+<xacro:module module_id="2" />
+<xacro:module module_id="3" />
+<xacro:module module_id="4" />
+
+<xacro:rigid_connection 
+  parent="base_link" child="module1_body_link" 
+  pos_x="-0.215" pos_y="-0.215" pos_z="0.068" z_psi="0" />
+
+<xacro:rigid_connection 
+  parent="base_link" child="module2_body_link" 
+  pos_x="-0.215" pos_y="0.215" pos_z="0.068" z_psi="0" />
+
+<xacro:rigid_connection 
+  parent="base_link" child="module3_body_link" 
+  pos_x="0.215" pos_y="-0.215" pos_z="0.068" z_psi="0" />
+  
+<xacro:rigid_connection 
+  parent="base_link" child="module4_body_link" 
+  pos_x="0.215" pos_y="0.215" pos_z="0.068" z_psi="0" />
+
+<static>0</static>
+</robot>
