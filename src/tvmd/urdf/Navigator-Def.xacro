@@ -2,28 +2,57 @@
 <robot name="tvmd" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <xacro:macro name="navigator">
-  <link name="base_link">
-    <inertial>
-        <origin xyz="0.023872244589948865 -0.0009500409901555752 0.03522161274068737" rpy="0 0 0"/>
-        <mass value="2.83791501"/>
-        <inertia ixx="0.01210074" iyy="0.01841678" izz="0.02144845" ixy="0.00034820" iyz="-0.00017235" ixz="-0.00023145"/>
-    </inertial>
-    <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-        <mesh filename="package://tvmd/meshes/navigator/NavigatorModule-Sim.stl" scale="0.001 0.001 0.001"/>
-        </geometry>
-        <material name="dark_blue"/>
-    </visual>
-    <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-        <mesh filename="package://tvmd/meshes/navigator/NavigatorModule-Sim.stl" scale="0.001 0.001 0.001"/>
-        </geometry>
-    </collision>
+    <link name="base_link">
+        <inertial>
+            <origin xyz="0.023872244589948865 -0.0009500409901555752 0.03522161274068737" rpy="0 0 0"/>
+            <mass value="2.83791501"/>
+            <inertia ixx="0.01210074" iyy="0.01841678" izz="0.02144845" ixy="0.00034820" iyz="-0.00017235" ixz="-0.00023145"/>
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+            <mesh filename="package://tvmd/meshes/navigator/NavigatorModule-Sim.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="dark_blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 ${pi/4}"/>
+            <geometry>
+                <!-- <mesh filename="package://tvmd/meshes/navigator/NavigatorModule-Sim.stl" scale="0.001 0.001 0.001"/> -->
+                <box size="0.3 0.3 0.1" />
+            </geometry>
+        </collision>
 
-    <velocity_decay/>
-  </link>
+        <velocity_decay/>
+    </link>
+
+    <link name="imu_sensor_link">
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.02 0.02 0.02"/>
+            </geometry>
+        </collision>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.02 0.02 0.02"/>
+            </geometry>
+            <material name="gray"/>
+        </visual>
+        <inertial>
+            <mass value="0.001" />
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="0.00000015" ixy="0" ixz="0" iyy="0.00000015" iyz="0" izz="0.00000015" />
+        </inertial>
+    </link>
+
+    <joint name="imu_sensor_joint" type="fixed">
+        <axis xyz="0 0 1" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="imu_sensor_link"/>
+    </joint>
 </xacro:macro>
 
 <xacro:macro name="rigid_connection" params="parent child pos_x pos_y pos_z z_psi" >

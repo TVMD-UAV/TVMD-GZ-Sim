@@ -24,10 +24,11 @@
 </gazebo> -->
   <!-- Dynamics -->
   <!-- IMU -->
-  <gazebo reference="base_link">
+  <gazebo reference="imu_sensor_link">
     <sensor name="imu_sensor" type="imu">
       <always_on>true</always_on>
       <update_rate>250</update_rate>
+      <visualize>true</visualize>
     </sensor>
   </gazebo>
   <gazebo reference="base_link">
@@ -63,18 +64,45 @@
       <material name="dark_blue"/>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0.7853981633974483" xyz="0 0 0.05"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/navigator/NavigatorModule-Sim.stl" scale="0.001 0.001 0.001"/>
+        <!-- <mesh filename="package://tvmd/meshes/navigator/NavigatorModule-Sim.stl" scale="0.001 0.001 0.001"/> -->
+        <box size="0.3 0.3 0.1"/>
       </geometry>
     </collision>
     <velocity_decay/>
   </link>
+  <link name="imu_sensor_link">
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+      <material name="gray"/>
+    </visual>
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.00000015" ixy="0" ixz="0" iyy="0.00000015" iyz="0" izz="0.00000015"/>
+    </inertial>
+  </link>
+  <joint name="imu_sensor_joint" type="fixed">
+    <axis xyz="0 0 1"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="imu_sensor_link"/>
+  </joint>
   <link name="module1_body_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.03950362887818236 0.0002336451659535331 -0.03359920964595942"/>
-      <mass value="0.50885294"/>
-      <inertia ixx="0.00286197" ixy="0.00001218" ixz="-0.00038649" iyy="0.01669981" iyz="-0.00000803" izz="0.01760490"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.50823179"/>
+      <inertia ixx="0.01671968" ixy="-0.00001217" ixz="-0.00000326" iyy="0.00290137" iyz="-0.00003388" izz="0.01758533"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -101,23 +129,23 @@
   </gazebo>
   <link name="module1_gimbal_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.1843065553329719 0.00019186033306794898 -0.0008717237920348236"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.03395528"/>
-      <inertia ixx="0.00000159" ixy="0.0" ixz="0.0" iyy="0.00031944" iyz="-0.00000003" izz="0.00031947"/>
+      <inertia ixx="0.00034948" ixy="0.0" ixz="0.0" iyy="0.00000164" iyz="-0.00000002" izz="0.00034950"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0.201475 -0.0 0.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 -0.068"/>
       <geometry>
         <mesh filename="package://tvmd/meshes/agent/Gimbal_Frame_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="gray"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="0.201475 -0.0 0.0" rpy="0 0 0"/>
+    <collision name="module1_actuator_collision">
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/Gimbal_Frame_1.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.400" radius="0.010"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module1_gimbal_link">
     <material>Gazebo/Gray</material>
@@ -129,23 +157,17 @@
   </gazebo>
   <link name="module1_actuator_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="8.674536786092266e-05 -0.012737509954264759 -0.0036057781438169905"/>
-      <mass value="0.12541538"/>
-      <inertia ixx="0.00030455" ixy="-0.00000010" ixz="-0.00000018" iyy="0.00029933" iyz="0.00000437" izz="0.00001545"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.12540720"/>
+      <inertia ixx="0.00029933" ixy="-0.00000011" ixz="-0.00000476" iyy="0.00030455" iyz="0.00000018" izz="0.00001575"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.0005 -0.011 0.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 -0.068"/>
       <geometry>
         <mesh filename="package://tvmd/meshes/agent/Actuator_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="gray"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.0005 -0.011 0.0" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://tvmd/meshes/agent/Actuator_1.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </collision> -->
   </link>
   <gazebo reference="module1_actuator_link">
     <material>Gazebo/Gray</material>
@@ -157,23 +179,23 @@
   </gazebo>
   <link name="module1_prop1_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="3.216065230847529e-08 -3.6756938827939636e-08 -0.003327345566246087"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.00253778"/>
-      <inertia ixx="0.00000005" ixy="0.0" ixz="-0.00000009" iyy="0.00000705" iyz="0.0" izz="0.00000702"/>
+      <inertia ixx="0.00000702" ixy="0.00000000" ixz="0.00000000" iyy="0.00000005" iyz="-0.00000009" izz="0.00000705"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.0005 -0.0005 -0.0816"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tvmd/meshes/agent/Propeller_9047.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="yellow"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.0005 -0.0005 -0.0816" rpy="0 0 0"/>
+    <collision name="module1_rotor_1_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_1.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.005" radius="0.12"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module1_prop1_link">
     <material>Gazebo/Yellow</material>
@@ -185,23 +207,23 @@
   </gazebo>
   <link name="module1_prop2_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="3.216065230847529e-08 -3.6756938827939636e-08 -0.003327345566246087"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.00253778"/>
-      <inertia ixx="0.00000005" ixy="0.0" ixz="-0.00000009" iyy="0.00000705" iyz="0.0" izz="0.00000702"/>
+      <inertia ixx="0.00000702" ixy="0.00000000" ixz="0.00000000" iyy="0.00000005" iyz="-0.00000009" izz="0.00000705"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.001 -0.0 0.0746"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tvmd/meshes/agent/Propeller_9047.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="yellow"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.001 -0.0 0.0746" rpy="0 0 0"/>
+    <collision name="module1_rotor_2_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_2.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.005" radius="0.12"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module1_prop2_link">
     <material>Gazebo/Yellow</material>
@@ -212,14 +234,14 @@
     <gravity>true</gravity>
   </gazebo>
   <joint name="module1_body_gimbal_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.201475 0.0 0.0"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.068"/>
     <parent link="module1_body_link"/>
     <child link="module1_gimbal_link"/>
-    <axis xyz="-1.0 0.0 0.0"/>
+    <axis xyz="0.0 1.0 0.0"/>
     <limit effort="30000" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="10.0"/>
-    <dynamics damping="1.000"/>
+    <dynamics damping="0.000"/>
     <physics>
-      <ode implicit_spring_damper="1"/>
+      <ode implicit_spring_damper="0"/>
     </physics>
   </joint>
   <transmission name="revolute_module1_body_gimbal_joint">
@@ -235,20 +257,20 @@
   <gazebo>
     <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
       <joint_name>module1_body_gimbal_joint</joint_name>
-      <sub_topic>servo_0</sub_topic>
+      <sub_topic>servo_1</sub_topic>
       <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
       <!-- <joint_index>"${joint_index}"</joint_index> -->
     </plugin>
   </gazebo>
   <joint name="module1_gimbal_actuator_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0.201975 0.011 0.0"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
     <parent link="module1_gimbal_link"/>
     <child link="module1_actuator_link"/>
-    <axis xyz="0.0 -1.0 -0.0"/>
+    <axis xyz="1.0 0.0 0.0"/>
     <limit effort="30000" lower="-0.5235987755982988" upper="0.5235987755982988" velocity="10.0"/>
-    <dynamics damping="1.000"/>
+    <dynamics damping="0.000"/>
     <physics>
-      <ode implicit_spring_damper="1"/>
+      <ode implicit_spring_damper="0"/>
     </physics>
   </joint>
   <transmission name="revolute_module1_gimbal_actuator_joint">
@@ -264,16 +286,16 @@
   <gazebo>
     <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
       <joint_name>module1_gimbal_actuator_joint</joint_name>
-      <sub_topic>servo_1</sub_topic>
+      <sub_topic>servo_0</sub_topic>
       <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
       <!-- <joint_index>"${joint_index}"</joint_index> -->
     </plugin>
   </gazebo>
   <joint name="module1_actuator_prop1_joint" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0 -0.0105 0.0816"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.0781"/>
     <parent link="module1_actuator_link"/>
     <child link="module1_prop1_link"/>
-    <axis xyz="-0.0 -0.0 -1.0"/>
+    <axis xyz="0.0 0.0 1.0"/>
     <limit effort="30000" lower="-1e+16" upper="1e+16" velocity="10000.0"/>
     <!-- <limit lower="-1e+16" upper="1e+16" /> -->
   </joint>
@@ -306,10 +328,10 @@
     </plugin>
   </gazebo>
   <joint name="module1_actuator_prop2_joint" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0005 -0.011 -0.0746"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.0781"/>
     <parent link="module1_actuator_link"/>
     <child link="module1_prop2_link"/>
-    <axis xyz="0.0 0.0 1.0"/>
+    <axis xyz="0.0 0.0 -1.0"/>
     <limit effort="30000" lower="-1e+16" upper="1e+16" velocity="10000.0"/>
     <!-- <limit lower="-1e+16" upper="1e+16" /> -->
   </joint>
@@ -343,9 +365,9 @@
   </gazebo>
   <link name="module2_body_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.03950362887818236 0.0002336451659535331 -0.03359920964595942"/>
-      <mass value="0.50885294"/>
-      <inertia ixx="0.00286197" ixy="0.00001218" ixz="-0.00038649" iyy="0.01669981" iyz="-0.00000803" izz="0.01760490"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.50823179"/>
+      <inertia ixx="0.01671968" ixy="-0.00001217" ixz="-0.00000326" iyy="0.00290137" iyz="-0.00003388" izz="0.01758533"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -372,23 +394,23 @@
   </gazebo>
   <link name="module2_gimbal_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.1843065553329719 0.00019186033306794898 -0.0008717237920348236"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.03395528"/>
-      <inertia ixx="0.00000159" ixy="0.0" ixz="0.0" iyy="0.00031944" iyz="-0.00000003" izz="0.00031947"/>
+      <inertia ixx="0.00034948" ixy="0.0" ixz="0.0" iyy="0.00000164" iyz="-0.00000002" izz="0.00034950"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0.201475 -0.0 0.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 -0.068"/>
       <geometry>
         <mesh filename="package://tvmd/meshes/agent/Gimbal_Frame_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="gray"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="0.201475 -0.0 0.0" rpy="0 0 0"/>
+    <collision name="module2_actuator_collision">
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/Gimbal_Frame_1.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.400" radius="0.010"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module2_gimbal_link">
     <material>Gazebo/Gray</material>
@@ -400,23 +422,17 @@
   </gazebo>
   <link name="module2_actuator_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="8.674536786092266e-05 -0.012737509954264759 -0.0036057781438169905"/>
-      <mass value="0.12541538"/>
-      <inertia ixx="0.00030455" ixy="-0.00000010" ixz="-0.00000018" iyy="0.00029933" iyz="0.00000437" izz="0.00001545"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.12540720"/>
+      <inertia ixx="0.00029933" ixy="-0.00000011" ixz="-0.00000476" iyy="0.00030455" iyz="0.00000018" izz="0.00001575"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.0005 -0.011 0.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 -0.068"/>
       <geometry>
         <mesh filename="package://tvmd/meshes/agent/Actuator_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="gray"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.0005 -0.011 0.0" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://tvmd/meshes/agent/Actuator_1.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </collision> -->
   </link>
   <gazebo reference="module2_actuator_link">
     <material>Gazebo/Gray</material>
@@ -428,23 +444,23 @@
   </gazebo>
   <link name="module2_prop1_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="3.216065230847529e-08 -3.6756938827939636e-08 -0.003327345566246087"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.00253778"/>
-      <inertia ixx="0.00000005" ixy="0.0" ixz="-0.00000009" iyy="0.00000705" iyz="0.0" izz="0.00000702"/>
+      <inertia ixx="0.00000702" ixy="0.00000000" ixz="0.00000000" iyy="0.00000005" iyz="-0.00000009" izz="0.00000705"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.0005 -0.0005 -0.0816"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tvmd/meshes/agent/Propeller_9047.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="yellow"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.0005 -0.0005 -0.0816" rpy="0 0 0"/>
+    <collision name="module2_rotor_1_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_1.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.005" radius="0.12"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module2_prop1_link">
     <material>Gazebo/Yellow</material>
@@ -456,23 +472,23 @@
   </gazebo>
   <link name="module2_prop2_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="3.216065230847529e-08 -3.6756938827939636e-08 -0.003327345566246087"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.00253778"/>
-      <inertia ixx="0.00000005" ixy="0.0" ixz="-0.00000009" iyy="0.00000705" iyz="0.0" izz="0.00000702"/>
+      <inertia ixx="0.00000702" ixy="0.00000000" ixz="0.00000000" iyy="0.00000005" iyz="-0.00000009" izz="0.00000705"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.001 -0.0 0.0746"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tvmd/meshes/agent/Propeller_9047.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="yellow"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.001 -0.0 0.0746" rpy="0 0 0"/>
+    <collision name="module2_rotor_2_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_2.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.005" radius="0.12"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module2_prop2_link">
     <material>Gazebo/Yellow</material>
@@ -483,14 +499,14 @@
     <gravity>true</gravity>
   </gazebo>
   <joint name="module2_body_gimbal_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.201475 0.0 0.0"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.068"/>
     <parent link="module2_body_link"/>
     <child link="module2_gimbal_link"/>
-    <axis xyz="-1.0 0.0 0.0"/>
+    <axis xyz="0.0 1.0 0.0"/>
     <limit effort="30000" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="10.0"/>
-    <dynamics damping="1.000"/>
+    <dynamics damping="0.000"/>
     <physics>
-      <ode implicit_spring_damper="1"/>
+      <ode implicit_spring_damper="0"/>
     </physics>
   </joint>
   <transmission name="revolute_module2_body_gimbal_joint">
@@ -506,20 +522,20 @@
   <gazebo>
     <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
       <joint_name>module2_body_gimbal_joint</joint_name>
-      <sub_topic>servo_2</sub_topic>
+      <sub_topic>servo_3</sub_topic>
       <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
       <!-- <joint_index>"${joint_index}"</joint_index> -->
     </plugin>
   </gazebo>
   <joint name="module2_gimbal_actuator_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0.201975 0.011 0.0"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
     <parent link="module2_gimbal_link"/>
     <child link="module2_actuator_link"/>
-    <axis xyz="0.0 -1.0 -0.0"/>
+    <axis xyz="1.0 0.0 0.0"/>
     <limit effort="30000" lower="-0.5235987755982988" upper="0.5235987755982988" velocity="10.0"/>
-    <dynamics damping="1.000"/>
+    <dynamics damping="0.000"/>
     <physics>
-      <ode implicit_spring_damper="1"/>
+      <ode implicit_spring_damper="0"/>
     </physics>
   </joint>
   <transmission name="revolute_module2_gimbal_actuator_joint">
@@ -535,16 +551,16 @@
   <gazebo>
     <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
       <joint_name>module2_gimbal_actuator_joint</joint_name>
-      <sub_topic>servo_3</sub_topic>
+      <sub_topic>servo_2</sub_topic>
       <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
       <!-- <joint_index>"${joint_index}"</joint_index> -->
     </plugin>
   </gazebo>
   <joint name="module2_actuator_prop1_joint" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0 -0.0105 0.0816"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.0781"/>
     <parent link="module2_actuator_link"/>
     <child link="module2_prop1_link"/>
-    <axis xyz="-0.0 -0.0 -1.0"/>
+    <axis xyz="0.0 0.0 1.0"/>
     <limit effort="30000" lower="-1e+16" upper="1e+16" velocity="10000.0"/>
     <!-- <limit lower="-1e+16" upper="1e+16" /> -->
   </joint>
@@ -577,10 +593,10 @@
     </plugin>
   </gazebo>
   <joint name="module2_actuator_prop2_joint" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0005 -0.011 -0.0746"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.0781"/>
     <parent link="module2_actuator_link"/>
     <child link="module2_prop2_link"/>
-    <axis xyz="0.0 0.0 1.0"/>
+    <axis xyz="0.0 0.0 -1.0"/>
     <limit effort="30000" lower="-1e+16" upper="1e+16" velocity="10000.0"/>
     <!-- <limit lower="-1e+16" upper="1e+16" /> -->
   </joint>
@@ -614,9 +630,9 @@
   </gazebo>
   <link name="module3_body_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.03950362887818236 0.0002336451659535331 -0.03359920964595942"/>
-      <mass value="0.50885294"/>
-      <inertia ixx="0.00286197" ixy="0.00001218" ixz="-0.00038649" iyy="0.01669981" iyz="-0.00000803" izz="0.01760490"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.50823179"/>
+      <inertia ixx="0.01671968" ixy="-0.00001217" ixz="-0.00000326" iyy="0.00290137" iyz="-0.00003388" izz="0.01758533"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -643,23 +659,23 @@
   </gazebo>
   <link name="module3_gimbal_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.1843065553329719 0.00019186033306794898 -0.0008717237920348236"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.03395528"/>
-      <inertia ixx="0.00000159" ixy="0.0" ixz="0.0" iyy="0.00031944" iyz="-0.00000003" izz="0.00031947"/>
+      <inertia ixx="0.00034948" ixy="0.0" ixz="0.0" iyy="0.00000164" iyz="-0.00000002" izz="0.00034950"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0.201475 -0.0 0.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 -0.068"/>
       <geometry>
         <mesh filename="package://tvmd/meshes/agent/Gimbal_Frame_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="gray"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="0.201475 -0.0 0.0" rpy="0 0 0"/>
+    <collision name="module3_actuator_collision">
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/Gimbal_Frame_1.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.400" radius="0.010"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module3_gimbal_link">
     <material>Gazebo/Gray</material>
@@ -671,23 +687,17 @@
   </gazebo>
   <link name="module3_actuator_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="8.674536786092266e-05 -0.012737509954264759 -0.0036057781438169905"/>
-      <mass value="0.12541538"/>
-      <inertia ixx="0.00030455" ixy="-0.00000010" ixz="-0.00000018" iyy="0.00029933" iyz="0.00000437" izz="0.00001545"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.12540720"/>
+      <inertia ixx="0.00029933" ixy="-0.00000011" ixz="-0.00000476" iyy="0.00030455" iyz="0.00000018" izz="0.00001575"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.0005 -0.011 0.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 -0.068"/>
       <geometry>
         <mesh filename="package://tvmd/meshes/agent/Actuator_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="gray"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.0005 -0.011 0.0" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://tvmd/meshes/agent/Actuator_1.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </collision> -->
   </link>
   <gazebo reference="module3_actuator_link">
     <material>Gazebo/Gray</material>
@@ -699,23 +709,23 @@
   </gazebo>
   <link name="module3_prop1_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="3.216065230847529e-08 -3.6756938827939636e-08 -0.003327345566246087"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.00253778"/>
-      <inertia ixx="0.00000005" ixy="0.0" ixz="-0.00000009" iyy="0.00000705" iyz="0.0" izz="0.00000702"/>
+      <inertia ixx="0.00000702" ixy="0.00000000" ixz="0.00000000" iyy="0.00000005" iyz="-0.00000009" izz="0.00000705"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.0005 -0.0005 -0.0816"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tvmd/meshes/agent/Propeller_9047.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="yellow"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.0005 -0.0005 -0.0816" rpy="0 0 0"/>
+    <collision name="module3_rotor_1_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_1.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.005" radius="0.12"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module3_prop1_link">
     <material>Gazebo/Yellow</material>
@@ -727,23 +737,23 @@
   </gazebo>
   <link name="module3_prop2_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="3.216065230847529e-08 -3.6756938827939636e-08 -0.003327345566246087"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.00253778"/>
-      <inertia ixx="0.00000005" ixy="0.0" ixz="-0.00000009" iyy="0.00000705" iyz="0.0" izz="0.00000702"/>
+      <inertia ixx="0.00000702" ixy="0.00000000" ixz="0.00000000" iyy="0.00000005" iyz="-0.00000009" izz="0.00000705"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.001 -0.0 0.0746"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tvmd/meshes/agent/Propeller_9047.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="yellow"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.001 -0.0 0.0746" rpy="0 0 0"/>
+    <collision name="module3_rotor_2_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_2.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.005" radius="0.12"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module3_prop2_link">
     <material>Gazebo/Yellow</material>
@@ -754,14 +764,14 @@
     <gravity>true</gravity>
   </gazebo>
   <joint name="module3_body_gimbal_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.201475 0.0 0.0"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.068"/>
     <parent link="module3_body_link"/>
     <child link="module3_gimbal_link"/>
-    <axis xyz="-1.0 0.0 0.0"/>
+    <axis xyz="0.0 1.0 0.0"/>
     <limit effort="30000" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="10.0"/>
-    <dynamics damping="1.000"/>
+    <dynamics damping="0.000"/>
     <physics>
-      <ode implicit_spring_damper="1"/>
+      <ode implicit_spring_damper="0"/>
     </physics>
   </joint>
   <transmission name="revolute_module3_body_gimbal_joint">
@@ -777,20 +787,20 @@
   <gazebo>
     <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
       <joint_name>module3_body_gimbal_joint</joint_name>
-      <sub_topic>servo_4</sub_topic>
+      <sub_topic>servo_5</sub_topic>
       <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
       <!-- <joint_index>"${joint_index}"</joint_index> -->
     </plugin>
   </gazebo>
   <joint name="module3_gimbal_actuator_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0.201975 0.011 0.0"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
     <parent link="module3_gimbal_link"/>
     <child link="module3_actuator_link"/>
-    <axis xyz="0.0 -1.0 -0.0"/>
+    <axis xyz="1.0 0.0 0.0"/>
     <limit effort="30000" lower="-0.5235987755982988" upper="0.5235987755982988" velocity="10.0"/>
-    <dynamics damping="1.000"/>
+    <dynamics damping="0.000"/>
     <physics>
-      <ode implicit_spring_damper="1"/>
+      <ode implicit_spring_damper="0"/>
     </physics>
   </joint>
   <transmission name="revolute_module3_gimbal_actuator_joint">
@@ -806,16 +816,16 @@
   <gazebo>
     <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
       <joint_name>module3_gimbal_actuator_joint</joint_name>
-      <sub_topic>servo_5</sub_topic>
+      <sub_topic>servo_4</sub_topic>
       <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
       <!-- <joint_index>"${joint_index}"</joint_index> -->
     </plugin>
   </gazebo>
   <joint name="module3_actuator_prop1_joint" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0 -0.0105 0.0816"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.0781"/>
     <parent link="module3_actuator_link"/>
     <child link="module3_prop1_link"/>
-    <axis xyz="-0.0 -0.0 -1.0"/>
+    <axis xyz="0.0 0.0 1.0"/>
     <limit effort="30000" lower="-1e+16" upper="1e+16" velocity="10000.0"/>
     <!-- <limit lower="-1e+16" upper="1e+16" /> -->
   </joint>
@@ -848,10 +858,10 @@
     </plugin>
   </gazebo>
   <joint name="module3_actuator_prop2_joint" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0005 -0.011 -0.0746"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.0781"/>
     <parent link="module3_actuator_link"/>
     <child link="module3_prop2_link"/>
-    <axis xyz="0.0 0.0 1.0"/>
+    <axis xyz="0.0 0.0 -1.0"/>
     <limit effort="30000" lower="-1e+16" upper="1e+16" velocity="10000.0"/>
     <!-- <limit lower="-1e+16" upper="1e+16" /> -->
   </joint>
@@ -885,9 +895,9 @@
   </gazebo>
   <link name="module4_body_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.03950362887818236 0.0002336451659535331 -0.03359920964595942"/>
-      <mass value="0.50885294"/>
-      <inertia ixx="0.00286197" ixy="0.00001218" ixz="-0.00038649" iyy="0.01669981" iyz="-0.00000803" izz="0.01760490"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.50823179"/>
+      <inertia ixx="0.01671968" ixy="-0.00001217" ixz="-0.00000326" iyy="0.00290137" iyz="-0.00003388" izz="0.01758533"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -914,23 +924,23 @@
   </gazebo>
   <link name="module4_gimbal_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="0.1843065553329719 0.00019186033306794898 -0.0008717237920348236"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.03395528"/>
-      <inertia ixx="0.00000159" ixy="0.0" ixz="0.0" iyy="0.00031944" iyz="-0.00000003" izz="0.00031947"/>
+      <inertia ixx="0.00034948" ixy="0.0" ixz="0.0" iyy="0.00000164" iyz="-0.00000002" izz="0.00034950"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0.201475 -0.0 0.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 -0.068"/>
       <geometry>
         <mesh filename="package://tvmd/meshes/agent/Gimbal_Frame_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="gray"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="0.201475 -0.0 0.0" rpy="0 0 0"/>
+    <collision name="module4_actuator_collision">
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/Gimbal_Frame_1.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.400" radius="0.010"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module4_gimbal_link">
     <material>Gazebo/Gray</material>
@@ -942,23 +952,17 @@
   </gazebo>
   <link name="module4_actuator_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="8.674536786092266e-05 -0.012737509954264759 -0.0036057781438169905"/>
-      <mass value="0.12541538"/>
-      <inertia ixx="0.00030455" ixy="-0.00000010" ixz="-0.00000018" iyy="0.00029933" iyz="0.00000437" izz="0.00001545"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.12540720"/>
+      <inertia ixx="0.00029933" ixy="-0.00000011" ixz="-0.00000476" iyy="0.00030455" iyz="0.00000018" izz="0.00001575"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.0005 -0.011 0.0"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 -0.068"/>
       <geometry>
         <mesh filename="package://tvmd/meshes/agent/Actuator_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="gray"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.0005 -0.011 0.0" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://tvmd/meshes/agent/Actuator_1.stl" scale="0.001 0.001 0.001"/>
-      </geometry>
-    </collision> -->
   </link>
   <gazebo reference="module4_actuator_link">
     <material>Gazebo/Gray</material>
@@ -970,23 +974,23 @@
   </gazebo>
   <link name="module4_prop1_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="3.216065230847529e-08 -3.6756938827939636e-08 -0.003327345566246087"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.00253778"/>
-      <inertia ixx="0.00000005" ixy="0.0" ixz="-0.00000009" iyy="0.00000705" iyz="0.0" izz="0.00000702"/>
+      <inertia ixx="0.00000702" ixy="0.00000000" ixz="0.00000000" iyy="0.00000005" iyz="-0.00000009" izz="0.00000705"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.0005 -0.0005 -0.0816"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tvmd/meshes/agent/Propeller_9047.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="yellow"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.0005 -0.0005 -0.0816" rpy="0 0 0"/>
+    <collision name="module4_rotor_1_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_1.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.005" radius="0.12"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module4_prop1_link">
     <material>Gazebo/Yellow</material>
@@ -998,23 +1002,23 @@
   </gazebo>
   <link name="module4_prop2_link">
     <inertial>
-      <origin rpy="0 0 0" xyz="3.216065230847529e-08 -3.6756938827939636e-08 -0.003327345566246087"/>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="0.00253778"/>
-      <inertia ixx="0.00000005" ixy="0.0" ixz="-0.00000009" iyy="0.00000705" iyz="0.0" izz="0.00000702"/>
+      <inertia ixx="0.00000702" ixy="0.00000000" ixz="0.00000000" iyy="0.00000005" iyz="-0.00000009" izz="0.00000705"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.001 -0.0 0.0746"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://tvmd/meshes/agent/Propeller_9047.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="yellow"/>
     </visual>
-    <!-- <collision>
-      <origin xyz="-0.001 -0.0 0.0746" rpy="0 0 0"/>
+    <collision name="module4_rotor_2_collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://tvmd/meshes/agent/propeller_9047_2.stl" scale="0.001 0.001 0.001"/>
+        <cylinder length="0.005" radius="0.12"/>
       </geometry>
-    </collision> -->
+    </collision>
   </link>
   <gazebo reference="module4_prop2_link">
     <material>Gazebo/Yellow</material>
@@ -1025,14 +1029,14 @@
     <gravity>true</gravity>
   </gazebo>
   <joint name="module4_body_gimbal_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.201475 0.0 0.0"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.068"/>
     <parent link="module4_body_link"/>
     <child link="module4_gimbal_link"/>
-    <axis xyz="-1.0 0.0 0.0"/>
+    <axis xyz="0.0 1.0 0.0"/>
     <limit effort="30000" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="10.0"/>
-    <dynamics damping="1.000"/>
+    <dynamics damping="0.000"/>
     <physics>
-      <ode implicit_spring_damper="1"/>
+      <ode implicit_spring_damper="0"/>
     </physics>
   </joint>
   <transmission name="revolute_module4_body_gimbal_joint">
@@ -1048,20 +1052,20 @@
   <gazebo>
     <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
       <joint_name>module4_body_gimbal_joint</joint_name>
-      <sub_topic>servo_6</sub_topic>
+      <sub_topic>servo_7</sub_topic>
       <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
       <!-- <joint_index>"${joint_index}"</joint_index> -->
     </plugin>
   </gazebo>
   <joint name="module4_gimbal_actuator_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0.201975 0.011 0.0"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
     <parent link="module4_gimbal_link"/>
     <child link="module4_actuator_link"/>
-    <axis xyz="0.0 -1.0 -0.0"/>
+    <axis xyz="1.0 0.0 0.0"/>
     <limit effort="30000" lower="-0.5235987755982988" upper="0.5235987755982988" velocity="10.0"/>
-    <dynamics damping="1.000"/>
+    <dynamics damping="0.000"/>
     <physics>
-      <ode implicit_spring_damper="1"/>
+      <ode implicit_spring_damper="0"/>
     </physics>
   </joint>
   <transmission name="revolute_module4_gimbal_actuator_joint">
@@ -1077,16 +1081,16 @@
   <gazebo>
     <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
       <joint_name>module4_gimbal_actuator_joint</joint_name>
-      <sub_topic>servo_7</sub_topic>
+      <sub_topic>servo_6</sub_topic>
       <!-- <topic>"/model/tvmd_0/servo_${joint_index}"</topic> -->
       <!-- <joint_index>"${joint_index}"</joint_index> -->
     </plugin>
   </gazebo>
   <joint name="module4_actuator_prop1_joint" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0 -0.0105 0.0816"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 0.0781"/>
     <parent link="module4_actuator_link"/>
     <child link="module4_prop1_link"/>
-    <axis xyz="-0.0 -0.0 -1.0"/>
+    <axis xyz="0.0 0.0 1.0"/>
     <limit effort="30000" lower="-1e+16" upper="1e+16" velocity="10000.0"/>
     <!-- <limit lower="-1e+16" upper="1e+16" /> -->
   </joint>
@@ -1119,10 +1123,10 @@
     </plugin>
   </gazebo>
   <joint name="module4_actuator_prop2_joint" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0005 -0.011 -0.0746"/>
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.0781"/>
     <parent link="module4_actuator_link"/>
     <child link="module4_prop2_link"/>
-    <axis xyz="0.0 0.0 1.0"/>
+    <axis xyz="0.0 0.0 -1.0"/>
     <limit effort="30000" lower="-1e+16" upper="1e+16" velocity="10000.0"/>
     <!-- <limit lower="-1e+16" upper="1e+16" /> -->
   </joint>
@@ -1155,25 +1159,25 @@
     </plugin>
   </gazebo>
   <joint name="rigid_base_link_module1_body_link" type="fixed">
-    <origin rpy="0 0 0" xyz="-0.215 -0.215 0.068"/>
+    <origin rpy="0 0 1.5707963267948966" xyz="0.215 0.215 0.0"/>
     <parent link="base_link"/>
     <child link="module1_body_link"/>
   </joint>
   <joint name="rigid_base_link_module2_body_link" type="fixed">
-    <origin rpy="0 0 0" xyz="-0.215 0.215 0.068"/>
+    <origin rpy="0 0 1.5707963267948966" xyz="0.215 -0.215 0.0"/>
     <parent link="base_link"/>
     <child link="module2_body_link"/>
   </joint>
   <joint name="rigid_base_link_module3_body_link" type="fixed">
-    <origin rpy="0 0 0" xyz="0.215 -0.215 0.068"/>
+    <origin rpy="0 0 0" xyz="-0.215 0.215 0.0"/>
     <parent link="base_link"/>
     <child link="module3_body_link"/>
   </joint>
   <joint name="rigid_base_link_module4_body_link" type="fixed">
-    <origin rpy="0 0 0" xyz="0.215 0.215 0.068"/>
+    <origin rpy="0 0 0" xyz="-0.215 -0.215 0.0"/>
     <parent link="base_link"/>
     <child link="module4_body_link"/>
   </joint>
-  <static>0</static>
+  <!-- <static>0</static> -->
 </robot>
 

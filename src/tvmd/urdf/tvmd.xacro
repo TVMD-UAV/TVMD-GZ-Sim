@@ -36,19 +36,18 @@
 
 <xacro:rigid_connection 
   parent="base_link" child="module1_body_link" 
-  pos_x="-0.215" pos_y="-0.215" pos_z="0.068" z_psi="0" />
+  pos_x="0.215" pos_y="0.215" pos_z="0.0" z_psi="${pi/2}" />
 
 <xacro:rigid_connection 
   parent="base_link" child="module2_body_link" 
-  pos_x="-0.215" pos_y="0.215" pos_z="0.068" z_psi="0" />
+  pos_x="0.215" pos_y="-0.215" pos_z="0.0" z_psi="${pi/2}" />
 
 <xacro:rigid_connection 
   parent="base_link" child="module3_body_link" 
-  pos_x="0.215" pos_y="-0.215" pos_z="0.068" z_psi="0" />
+  pos_x="-0.215" pos_y="0.215" pos_z="0.0" z_psi="0" />
   
 <xacro:rigid_connection 
   parent="base_link" child="module4_body_link" 
-  pos_x="0.215" pos_y="0.215" pos_z="0.068" z_psi="0" />
+  pos_x="-0.215" pos_y="-0.215" pos_z="0.0" z_psi="0" />
 
-<static>0</static>
 </robot>
