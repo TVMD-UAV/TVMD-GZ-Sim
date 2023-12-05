@@ -52,7 +52,7 @@ sh ./tools/gen_sdf.sh
 ```
 
 ### ULog File Conversion
-The conversion is done by `tools/pyulog/pyulog/ulog2rosbag.py`. Please follow the instruction in [`tools/pyulog`](https://github.com/PX4/pyulog) to install the tool.
+The conversion is done by `tools/pyulog/pyulog/ulog2rosbag.py`. Please follow the instruction in [`tools/pyulog`](./tools/pyulog/README.md) to install the tool.
 A script is provided to facilitate the conversion:
 ```bash
 ./ulog2bag.sh -f <ulog_filename>.ulg
