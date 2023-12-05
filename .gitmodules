@@ -1,3 +1,6 @@
 [submodule "tools/pyulog"]
 	path = tools/pyulog
 	url = https://github.com/PX4/pyulog
+[submodule "src/px4_msgs"]
+	path = src/px4_msgs
+	url = https://github.com/TVMD-UAV/px4_msgs
