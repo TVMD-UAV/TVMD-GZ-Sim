@@ -233,6 +233,8 @@ Visualization Manager:
           Value: false
         module4_prop2_link:
           Value: false
+        world_frame:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 0.5
       Name: TF
@@ -240,37 +242,38 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base_link:
-          imu_sensor_link:
-            {}
-          module1_body_link:
-            module1_gimbal_link:
-              module1_actuator_link:
-                module1_prop1_link:
-                  {}
-                module1_prop2_link:
-                  {}
-          module2_body_link:
-            module2_gimbal_link:
-              module2_actuator_link:
-                module2_prop1_link:
-                  {}
-                module2_prop2_link:
-                  {}
-          module3_body_link:
-            module3_gimbal_link:
-              module3_actuator_link:
-                module3_prop1_link:
-                  {}
-                module3_prop2_link:
-                  {}
-          module4_body_link:
-            module4_gimbal_link:
-              module4_actuator_link:
-                module4_prop1_link:
-                  {}
-                module4_prop2_link:
-                  {}
+        world_frame:
+          base_link:
+            imu_sensor_link:
+              {}
+            module1_body_link:
+              module1_gimbal_link:
+                module1_actuator_link:
+                  module1_prop1_link:
+                    {}
+                  module1_prop2_link:
+                    {}
+            module2_body_link:
+              module2_gimbal_link:
+                module2_actuator_link:
+                  module2_prop1_link:
+                    {}
+                  module2_prop2_link:
+                    {}
+            module3_body_link:
+              module3_gimbal_link:
+                module3_actuator_link:
+                  module3_prop1_link:
+                    {}
+                  module3_prop2_link:
+                    {}
+            module4_body_link:
+              module4_gimbal_link:
+                module4_actuator_link:
+                  module4_prop1_link:
+                    {}
+                  module4_prop2_link:
+                    {}
       Update Interval: 0
       Value: true
     - Class: rviz/MarkerArray
@@ -278,17 +281,14 @@ Visualization Manager:
       Marker Topic: visualization_marker_array
       Name: MarkerArray
       Namespaces:
-        module1: true
-        module2: true
-        module3: true
-        module4: true
+        {}
       Queue Size: 100
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: base_link
+    Fixed Frame: world_frame
     Frame Rate: 30
   Name: root
   Tools:
@@ -348,5 +348,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1216
-  X: 153
-  Y: -31
+  X: -32
+  Y: -32

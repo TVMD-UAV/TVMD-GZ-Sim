@@ -4,10 +4,15 @@ import math
 import sys
 import xml.dom.minidom
 
+
+import tf
+import tf2_ros
+
 import rospy
 from px4_msgs.msg import ActuatorMotors
 from px4_msgs.msg import ActuatorServos
 from px4_msgs.msg import ControlAllocationMetaData
+from px4_msgs.msg import VehicleAttitude
 from sensor_msgs.msg import JointState
 
 # For meta data visualization
@@ -15,6 +20,7 @@ from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
 from std_msgs.msg import ColorRGBA
 from visualization_msgs.msg import MarkerArray
+from geometry_msgs.msg import TransformStamped
 
 '''
 header:
@@ -68,7 +74,7 @@ class MetaDataMarker:
             
             self.marker_array.markers[aid].pose.position.x = 0
             self.marker_array.markers[aid].pose.position.y = 0
-            self.marker_array.markers[aid].pose.position.z = 0
+            self.marker_array.markers[aid].pose.position.z = 0.065
             self.marker_array.markers[aid].pose.orientation.x = 0.0
             self.marker_array.markers[aid].pose.orientation.y = 0.0
             self.marker_array.markers[aid].pose.orientation.z = 0.0
@@ -108,10 +114,11 @@ class MetaDataMarker:
         marker.pose.position.x = 0
         marker.pose.position.y = 0
         marker.pose.position.z = 0
-        marker.pose.orientation.x = 0.0
-        marker.pose.orientation.y = 0.0
-        marker.pose.orientation.z = 0.0
-        marker.pose.orientation.w = 1.0
+        quat = tf.transformations.quaternion_from_euler(0.0, 0.0, 0.0)  
+        marker.pose.orientation.x = quat[0]
+        marker.pose.orientation.y = quat[1]
+        marker.pose.orientation.z = quat[2]
+        marker.pose.orientation.w = quat[3]
 
         # scale.x is the shaft diameter, and 
         # scale.y is the head diameter. 
@@ -136,6 +143,7 @@ class MetaDataMarker:
 
 
     def __init__(self, _num_module: int) -> None:
+        self.z_offset = 0.065
         self.scales = 0.1
         self.num_modules = _num_module
         self.marker_array = MarkerArray()
@@ -201,9 +209,9 @@ class MetaDataMarker:
                 active_agent[sat_indices[iter]] = False
                 
     def __update_arrow(self, marker_idx: int, vec: list) -> None:
-        self.marker_array.markers[marker_idx].points[1].x = vec[0] * self.scales
-        self.marker_array.markers[marker_idx].points[1].y = vec[1] * self.scales
-        self.marker_array.markers[marker_idx].points[1].z = vec[2] * self.scales
+        self.marker_array.markers[marker_idx].points[1].x = vec[0]
+        self.marker_array.markers[marker_idx].points[1].y = vec[1]
+        self.marker_array.markers[marker_idx].points[1].z = vec[2]
 
     def update_wrench(self, sp:list) -> None:
         torque = sp[0:3]
@@ -301,6 +309,23 @@ class Republisher:
                     joint['continuous'] = True
                 self.free_joints[name] = joint
 
+    def __init_baselink_transform(self):
+        transform = TransformStamped()
+        transform.header.stamp = rospy.Time.now()
+        # Quaternion rotation from the FRD body frame to the NED earth frame
+        transform.header.frame_id = "base_link"
+        transform.child_frame_id = "world_frame"
+        transform.transform.translation.x = 0.0
+        transform.transform.translation.y = 0.0
+        transform.transform.translation.z = 0.0
+
+        quat = tf.transformations.quaternion_from_euler(0.0, 0.0, 0.0)  
+        transform.transform.rotation.x = quat[0]
+        transform.transform.rotation.y = quat[1]
+        transform.transform.rotation.z = quat[2]
+        transform.transform.rotation.w = quat[3]
+        return transform
+
     def __init__(self) -> None:
         rospy.init_node('tvmd_republisher')
         self.last_timestamp = 0
@@ -334,6 +359,10 @@ class Republisher:
         self.pub = rospy.Publisher("joint_states", JointState, queue_size=1)
 
         # TODO: Load parameters from urdf file, and calculate the scales for joints
+
+        # baselink attitude transformation broadcaster
+        self.broadcaster = tf2_ros.StaticTransformBroadcaster()
+        self.baselink_transform = self.__init_baselink_transform()
 
         topic = 'visualization_marker_array'
         self.marker_pub = rospy.Publisher(topic, MarkerArray, queue_size=1)
@@ -375,9 +404,9 @@ class Republisher:
         self.data_update(data, "servos")
     
     def meta_data_listener(self, data: ControlAllocationMetaData):
-        print(data.saturated_idx)
-        print(data.increment)
-        self.marker_data.pretty_print(data)
+        # print(data.saturated_idx)
+        # print(data.increment)
+        # self.marker_data.pretty_print(data)
         
         # update marker data
         self.marker_data.update_forces(data.f_x, data.f_y, data.f_z, data.saturated_idx, data.increment)
@@ -387,6 +416,22 @@ class Republisher:
         # publish marker topic
         self.marker_pub.publish(self.marker_data.marker_array)
 
+    def vehicle_attitude_listener(self, data: VehicleAttitude):
+        # Quaternion rotation from the FRD body frame to the NED earth frame
+        
+        # I don't know why, but the following line does work 
+        # Including a right multiplication of the inverse of the delta quaternion, 
+        # which contains a pure yaw rotation, the inverse direction of the x-component.
+        q_reset = data.delta_q_reset
+        q = data.q
+        q = tf.transformations.quaternion_multiply(q, tf.transformations.quaternion_inverse(q_reset))
+        
+        self.baselink_transform.header.stamp = rospy.Time.now()
+        self.baselink_transform.transform.rotation.x = -q[1]
+        self.baselink_transform.transform.rotation.y = q[2]
+        self.baselink_transform.transform.rotation.z = q[3]
+        self.baselink_transform.transform.rotation.w = q[0]
+        self.broadcaster.sendTransform(self.baselink_transform)
 
     def run(self):
         # Allow Rviz to initialize robot model
@@ -402,6 +447,7 @@ class Republisher:
         rospy.Subscriber("px4/actuator_motors", ActuatorMotors, self.motor_listener)
         rospy.Subscriber("px4/actuator_servos", ActuatorServos, self.servo_listener)
         rospy.Subscriber("px4/control_allocation_meta_data", ControlAllocationMetaData, self.meta_data_listener)
+        rospy.Subscriber("px4/vehicle_attitude", VehicleAttitude, self.vehicle_attitude_listener)
         rospy.spin()
         return
 
