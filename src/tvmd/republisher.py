@@ -417,20 +417,22 @@ class Republisher:
         self.marker_pub.publish(self.marker_data.marker_array)
 
     def vehicle_attitude_listener(self, data: VehicleAttitude):
-        # Quaternion rotation from the FRD body frame to the NED earth frame
+        # # Quaternion rotation from the FRD body frame to the NED earth frame
         
-        # I don't know why, but the following line does work 
-        # Including a right multiplication of the inverse of the delta quaternion, 
-        # which contains a pure yaw rotation, the inverse direction of the x-component.
-        q_reset = data.delta_q_reset
-        q = data.q
-        q = tf.transformations.quaternion_multiply(q, tf.transformations.quaternion_inverse(q_reset))
-        
+        # # I don't know why, but the following line does work 
+        # # Including a right multiplication of the inverse of the delta quaternion, 
+        # # which contains a pure yaw rotation, the inverse direction of the x-component.
+
+        # transform from wxyz to xyzw
+        q_reset = [data.delta_q_reset[i] for i in [1, 2, 3, 0]]
+        q = [data.q[i] for i in [1, 2, 3, 0]]
+
+        q = tf.transformations.quaternion_multiply(q, q_reset)
         self.baselink_transform.header.stamp = rospy.Time.now()
-        self.baselink_transform.transform.rotation.x = -q[1]
-        self.baselink_transform.transform.rotation.y = q[2]
-        self.baselink_transform.transform.rotation.z = q[3]
-        self.baselink_transform.transform.rotation.w = q[0]
+        self.baselink_transform.transform.rotation.x = -q[0]
+        self.baselink_transform.transform.rotation.y = q[1]
+        self.baselink_transform.transform.rotation.z = q[2]
+        self.baselink_transform.transform.rotation.w = q[3]
         self.broadcaster.sendTransform(self.baselink_transform)
 
     def run(self):
