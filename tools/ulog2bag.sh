@@ -22,10 +22,14 @@ FILENAME="${FILE_BASENAME%.*}"
 DEFAULT_TOPIC="control_allocation_meta_data,"\
 "actuator_motors,actuator_servos,"\
 "vehicle_thrust_setpoint,vehicle_torque_setpoint,"\
-"vehicle_rate_setpoint,vehicle_attitude_setpoint,"\
-"vehicle_attitude,vehicle_angular_velocity,"\
-"vehicle_acceleration,vehicle_local_position,"\
-"control_allocator_status" 
+"vehicle_rate_setpoint,"\
+"vehicle_attitude,"\
+"vehicle_acceleration"
+# "vehicle_local_position"
+# "manual_control_setpoint,"\
+# "vehicle_angular_velocity,"\
+# "vehicle_attitude_setpoint"
+# "control_allocator_status,"\
 
 if [[ ${topics+x} ]]; then
     echo "Given Topics: $topics";
@@ -36,7 +40,7 @@ fi
 
 echo "Converting $FILE_BASENAME to $DIR_NAME/$FILENAME.bag"
 
-SOURCE="$(pwd)/$filename"
-TARGET="$(pwd)/$DIR_NAME/$FILENAME.bag"
+SOURCE="$filename"
+TARGET="$DIR_NAME/$FILENAME.bag"
 
 ulog2rosbag -m $topics $SOURCE $TARGET
