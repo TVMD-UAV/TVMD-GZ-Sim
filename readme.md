@@ -62,3 +62,10 @@ Args:
 + `-a`: specify the topic to convert (default: `control_allocation_meta_data,actuator_motors,actuator_servos`, etc.)
 
 Note that this feature requires a ROS environment with `px4_msgs` built and sourced. And the `px4_msgs` package should have `ControlAllocationMetaData.msg` in `px4_msgs/msg`, which can be obtained in [TVMD-UAV/TVMD-PX4](https://github.com/TVMD-UAV/TVMD-PX4). 
+
+
+### Visualization of Flight Logs
+
+```bash
+python3 draw_attitude_error.py <path_to_ulog>
+```
